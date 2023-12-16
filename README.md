@@ -1,5 +1,6 @@
 Spano
 =====
+NOTE: Desmond added some extra stuff for CircleCI and Docker integration.
 
 A minimum viable [Micropub](https://www.w3.org/TR/micropub/)
 [Media Endpoint](https://www.w3.org/TR/micropub/#media-endpoint) implementation

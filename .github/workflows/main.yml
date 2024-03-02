@@ -7,7 +7,7 @@
 # To get a newer version, you will need to update the SHA.
 # You can also reference a tag or branch, but the action may change without warning.
 
-name: Publish Docker image
+name: Publish and Deploy
 
 on: 
   push:
@@ -41,3 +41,20 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+  deploy:
+    name: Deploy docker image
+    needs: push_to_registry
+    runs-on: ubuntu-latest
+    steps:
+    - name: reote deploy of docker image
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.PROD_HOST }}
+        port: ${{ secrets.SSH_PORT }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        script: |
+          docker pull desmondrivet/spano:main
+          docker stop spano
+          docker run --name spano -p 5050:5000 -v mp-root:/data --rm -d desmondrivet/spano:main
